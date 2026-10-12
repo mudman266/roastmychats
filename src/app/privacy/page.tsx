@@ -49,7 +49,7 @@ export default function PrivacyPage() {
           <li>❌ We do not write your file, your digest, or your roast to disk.</li>
           <li>❌ We do not log the body of your upload. Vercel logs request metadata (size, latency, status code) but not body content.</li>
           <li>❌ We do not share your digest with anyone other than OpenAI&apos;s API.</li>
-          <li>❌ We do not run analytics on the content of your chats. PostHog only captures aggregate events (e.g. <span className="font-mono text-sm">upload_started</span>, <span className="font-mono text-sm">roast_received</span>) and the archetype + score we returned. It never sees your messages.</li>
+          <li>❌ We do not run analytics on the content of your chats, or on anything you do in the app — no event tracking at all.</li>
           <li>❌ We do not track you with page counts. BeaconKit, a service run by this site&apos;s developer, records only which page was viewed (the path — never the query string, which is where a shared roast lives), the page you came from, and the time. No cookies, no IP address, nothing that identifies you.</li>
         </ul>
       </section>

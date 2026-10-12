@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { DeepRoast } from "@/lib/anthropic";
-import { track } from "@/components/posthog-provider";
 
 type State =
   | { kind: "loading"; progress: string }
@@ -39,11 +38,9 @@ export function DeepClient({ sessionId }: { sessionId: string | null }) {
         const data = await res.json();
         if (!res.ok) throw new Error(data?.error ?? `HTTP ${res.status}`);
         if (cancelled) return;
-        track("deep_roast_received", { archetype: data.roast.archetype });
         setState({ kind: "result", roast: data.roast as DeepRoast });
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : "unknown error";
-        track("deep_roast_error", { message });
         setState({ kind: "error", message });
       }
     })();

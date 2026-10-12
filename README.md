@@ -27,8 +27,7 @@ Full privacy page on the live site: [roastmychats.com/privacy](https://roastmych
 - OpenAI `gpt-4o-mini` for roast generation
 - Stripe Checkout for the $3.99 deep-roast unlock
 - `next/og` for shareable PNG cards
-- PostHog for aggregate event analytics (event names + archetype labels — never message content)
-- BeaconKit for page counts (path + referrer only — never the query string, where `/share` carries the roast)
+- BeaconKit for page counts — the only analytics (path + referrer only — never the query string, where `/share` carries the roast)
 - Tailwind v4
 - No database
 
@@ -36,7 +35,7 @@ Full privacy page on the live site: [roastmychats.com/privacy](https://roastmych
 
 ```bash
 cp .env.example .env.local
-# fill in: OPENAI_API_KEY, STRIPE_SECRET_KEY, NEXT_PUBLIC_POSTHOG_KEY (optional),
+# fill in: OPENAI_API_KEY, STRIPE_SECRET_KEY,
 #          NEXT_PUBLIC_BEACONKIT_PROJECT_ID + NEXT_PUBLIC_BEACONKIT_API_KEY (optional)
 npm install
 npm run dev

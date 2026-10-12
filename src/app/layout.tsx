@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { PostHogProvider } from "@/components/posthog-provider";
 import { BeaconKit } from "@/components/beaconkit";
 
 const sans = Inter({ variable: "--font-sans", subsets: ["latin"] });
@@ -29,8 +28,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
+        {/* BeaconKit (app.beaconkit.dev) — this site's only analytics. Renders nothing;
+            records one page view per route (path + referrer, never the query string).
+            Configured by NEXT_PUBLIC_BEACONKIT_*; see src/components/beaconkit.tsx. */}
         <BeaconKit />
-        <PostHogProvider>{children}</PostHogProvider>
+        {children}
       </body>
     </html>
   );

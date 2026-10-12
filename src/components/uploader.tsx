@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { track } from "./posthog-provider";
 import { parseExportZip, parseConversationsJson, buildDigest, type UserMessage } from "@/lib/parse-export";
 import type { FreeRoast } from "@/lib/anthropic";
 
@@ -27,8 +26,6 @@ export function Uploader() {
       });
       return;
     }
-
-    track("upload_started", { size: file.size, type: file.type, ext: isZip ? "zip" : "json" });
 
     try {
       setState({ kind: "uploading", progress: "reading file" });
@@ -69,12 +66,10 @@ export function Uploader() {
       } catch {
         // sessionStorage quota exceeded — deep roast will require re-upload after payment.
       }
-      track("roast_received", { archetype: roast.archetype, score: roast.score, message_count: messages.length });
       setState({ kind: "result", roast, d, digest });
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : "something broke during the upload";
-      track("roast_error", { message });
       setState({ kind: "error", message });
     }
   }, []);
@@ -98,7 +93,6 @@ export function Uploader() {
   );
 
   const onPay = useCallback(async () => {
-    track("deep_roast_clicked");
     try {
       const res = await fetch("/api/checkout", { method: "POST" });
       const data = await safeJson(res);
@@ -229,7 +223,6 @@ function ResultCard({ roast, d, onPay }: { roast: FreeRoast; d: string; onPay: (
           href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => track("share_clicked", { network: "x" })}
           className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elev)] p-5 text-center font-medium hover:border-[var(--accent)]"
         >
           post to X
@@ -237,7 +230,6 @@ function ResultCard({ roast, d, onPay }: { roast: FreeRoast; d: string; onPay: (
         <button
           onClick={() => {
             navigator.clipboard.writeText(shareUrl);
-            track("share_clicked", { network: "copy" });
           }}
           className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elev)] p-5 text-center font-medium hover:border-[var(--accent)]"
         >
@@ -247,7 +239,6 @@ function ResultCard({ roast, d, onPay }: { roast: FreeRoast; d: string; onPay: (
           href={`/api/card?d=${encodeURIComponent(d)}`}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => track("share_clicked", { network: "image" })}
           className="rounded-2xl border border-[var(--border)] bg-[var(--bg-elev)] p-5 text-center font-medium hover:border-[var(--accent)]"
         >
           download image
@@ -272,7 +263,6 @@ function ResultCard({ roast, d, onPay }: { roast: FreeRoast; d: string; onPay: (
         href="https://hasofferstracking.betterhelp.com/aff_c?offer_id=2&aff_id=PLACEHOLDER"
         target="_blank"
         rel="noopener noreferrer sponsored"
-        onClick={() => track("affiliate_clicked", { partner: "betterhelp" })}
         className="block rounded-2xl border border-[var(--border)] bg-[var(--bg-elev)] p-6 text-center hover:border-[var(--accent)]"
       >
         <div className="font-mono text-xs uppercase tracking-widest text-[var(--muted)]">sponsored</div>
